@@ -11,23 +11,71 @@
 		<input type="text" ng-model="hello">
 		
 		<ul>
-			<h3>Things</h3>
+			<h3>Choose coolest thing</h3>
 			<li ng-repeat="thing in things" ng-class="{'active':isCoolestThing(thing)}">
-				<a href="#" ng-click="setCoolestThing(thing)">
+				<a href="#" ng-click="setCoolestThing(thing)" >
 					{{thing.name}}
 				</a>
 			</li>
 		</ul>
 
-		<h2>coolest thing: {{coolestThing.name}} </h2>
+		<h2 ng-if="anythingCool()">coolest thing: {{coolestThing.name}} </h2>
 		<ul>
 			<li ng-repeat="trait in coolestThing.traits">
 				<p>{{trait}}</p>
 			</li>
-			<p ng-if="anythingCool()">cool? {{coolestThing["cool?"]}}</p>
+			<p ng-if="anythingCool()">
+				Is it cool? {{coolestThing.cool}}
+			</p>
 		</ul>
 
-		
+		<button ng-if="!createDropDown && !coolestThing" ng-click="switchCreate()"> Create new thing </button>
+		<!-- create form -->
+		<div id="thingCreateForm" ng-if="canCreate() && createDropDown">
+			
+			<div name="createForm">
+				<p>Name: {{newThing.name}}</p>
+				<input type="text" ng-model="newThing.name">
+				<p>How cool is this thing? ~{{newThing.cool}}~</p>
+				<input type="text" ng-model="newThing.cool">
+					<div>
+						<label> add new trait </label>
+						<input type="text" ng-model="newTrait.body">
+						<button ng-click="addTraits(newTrait)">+</button>
+						<div>Characteristics: {{newTrait.body}}
+							<p ng-repeat="trait in thingFormTraits">
+								{{trait}}
+							</p> 
+						</div>
+					</div>
+				<button ng-click="createThing(newThing)" type="submit">create new thing</button>
+				<button ng-click="switchCreate()"> cancel </button>
+			</div>
+		</div>
+
+
+		<!-- edit form -->
+		<div ng-if="canEdit()">
+			<button ng-if="!editDropDown" ng-click="switchEdit()">
+				edit {{coolestThing.name}}
+			</button>
+			<a ng-click="noCool()" href="#"> not very cool </a>
+
+			<div ng-if="editDropDown" name="editForm">
+				<p> </p>
+				<p>Name: {{coolestThing.name}}</p>
+				<input type="text" ng-model="coolestThing.name">
+				<p>How cool is this thing? ~{{coolestThing.cool}}~</p>
+				<input type="text" ng-model="coolestThing.cool">
+				<div ng-repeat="trait in coolestThing.traits">
+
+					<input type="text" ng-model="trait">
+				</div>
+				<button ng-click="switchEdit()"> Finish editing </button>
+			</div>			
+		</div>
+
+
 		<script src ="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
 		<script src="sandbox.js"></script>
 	</body>
